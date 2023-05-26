@@ -1,0 +1,290 @@
+@import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSansNeo.css);
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+:root {
+  --text: #2f2c28;
+  --link: #ff7f00;
+  --button: #fff;
+  --button-background: #ff7f00;
+  --button-decoration: #4eda7d;
+  --button-hover-background: #00c800;
+  --button-hover-decoration: #89efab;
+  --button-negative-background: #d62f50;
+  --button-negative-hover: #fcd3d3;
+  --button-secondary-background: #b9b7ba;
+  --button-secondary-hover: #e0e0e0;
+  --button-purple: #ff7f00;
+  --button-purple-background: #c4f7d5;
+  --button-darkpurple-background: #ff7f00;
+  --button-darkgray-background: #c6c6cc;
+
+  --input-background: #f3f3f3;
+  --input-placeholder: #8a95a0;
+  --input-focus-background: #e4f6d5;
+  --input-focus-border: #ff7f00;
+  --input-error: #e6584e;
+  --input-error-background: #fcf1f0;
+  --input-error-border: #d62f50;
+
+  --chip-primary: #ff7f00;
+  --chip-primary-background: #e4f6d5;
+  --chip-primary-border: #ff7f00;
+  --chip-border: #d9d9d9;
+
+  --card-background: #fff;
+
+  --box-border: #e3e1dc;
+  --box-gray-background: #f3f3f3;
+
+  --noti-background: #f4f3f6;
+  --noti-purple: #ff7f00;
+  --noti-purple-background: #e4f6d5;
+
+  --links-divider: #979797;
+
+  --background-and-color-transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: var(--text);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a.winwin-button {
+  display: inline-block;
+  text-decoration: none;
+  text-align: center;
+}
+
+.winwin-button {
+  position: relative;
+  border: none;
+  border-radius: 9999px;
+  transition: var(--background-and-color-transition);
+  cursor: pointer;
+  background-color: var(--button-background);
+  color: var(--button);
+  font-weight: 500;
+}
+
+.winwin-button:hover {
+  background-color: var(--button-hover-background);
+}
+
+.winwin-button.primary::after {
+  content: ' ';
+  position: absolute;
+  left: calc(100% - 20px);
+  top: 50%;
+  bottom: 0;
+  right: 0;
+  background-color: var(--button-decoration);
+  border-radius: 100% 0% 100% 0% / 100% 0% 100% 0%;
+  transition: var(--background-and-color-transition);
+}
+
+.winwin-button.primary.large::after {
+  left: calc(100% - 30px);
+}
+
+.winwin-button:hover::after,
+.winwin-button.primary:hover::after {
+  background-color: var(--button-hover-decoration);
+}
+
+.winwin-button.negative::after,
+.winwin-button.secondary::after {
+  display: none;
+}
+
+.winwin-button.negative {
+  background-color: var(--button-negative-background);
+}
+
+.winwin-button.negative:hover {
+  color: var(--button-negative-hover);
+}
+
+.winwin-button.secondary {
+  background-color: var(--button-secondary-background);
+}
+
+.winwin-button.secondary:hover {
+  color: var(--button-secondary-hover);
+}
+
+.winwin-button.small {
+  padding: 8px 18px;
+  font-size: 16px;
+  line-height: 16px;
+}
+
+.winwin-button,
+.winwin-button.medium {
+  padding: 14px;
+  font-size: 17px;
+  line-height: 17px;
+}
+
+.winwin-button.large {
+  padding: 18px 27px;
+  font-size: 21px;
+  line-height: 21px;
+}
+
+.winwin-button.purple {
+  padding: 8px 21px;
+}
+
+.winwin-button.darkpurple,
+.winwin-button.darkgray {
+  padding: 13px 31px;
+}
+
+.winwin-button.purple {
+  color: var(--button-purple);
+  background-color: var(--button-purple-background);
+}
+
+.winwin-button.darkpurple {
+  background-color: var(--button-darkpurple-background);
+}
+
+.winwin-button.darkgray {
+  background-color: var(--button-darkgray-background);
+}
+
+.winwin-input {
+  width: 100%;
+  padding: 17px 29px 17px;
+  border: 1px solid transparent;
+  border-radius: 27px;
+  outline: none;
+  font-size: 17px;
+  line-height: 17px;
+  background-color: var(--input-background);
+}
+
+.winwin-input input {
+  font-size: 17px;
+}
+
+textarea.winwin-input {
+  resize: none;
+  line-height: 2;
+}
+
+.winwin-input:focus {
+  border-color: var(--input-focus-border);
+  background-color: var(--input-focus-background);
+  transition: var(--background-and-color-transition), border-color 0.2s ease;
+}
+
+.winwin-input:placeholder {
+  color: var(--input-placeholder);
+}
+
+.winwin-input.error {
+  padding-right: 46px;
+  border: 1px solid var(--input-error-border);
+  background-color: var(--input-error-background);
+  background-position: top 50% right 13px;
+  background-image: url('../icons/ic-error.svg');
+  background-size: 29px;
+  background-repeat: no-repeat;
+}
+
+.error-message {
+  color: var(--input-error);
+}
+
+.winwin-input ~ .error-message {
+  display: block;
+  width: 100%;
+  line-height: 1.7;
+  text-align: right;
+  font-size: 14px;
+}
+
+.winwin-chip {
+  display: inline-block;
+  padding: 5px 18px 4px;
+  font-size: 17px;
+  line-height: 25px;
+  border: 1px solid var(--chip-border);
+  border-radius: 9999px;
+}
+
+.winwin-chip.primary {
+  font-weight: bold;
+  color: var(--chip-primary);
+  background-color: var(--chip-primary-background);
+  border-color: var(--chip-primary-border);
+}
+
+.winwin-del {
+  color: #b9b7ba;
+}
+
+.winwin-card {
+  border-radius: 16px;
+  box-shadow: 0 0 14px 0 rgba(219, 221, 223, 0.79);
+  background-color: var(--card-background);
+}
+
+.winwin-box {
+  border-radius: 33px;
+  border: solid 2px var(--box-border);
+}
+
+.winwin-box.gray-background {
+  border-radius: 27px;
+  border: none;
+  background-color: var(--box-gray-background);
+}
+
+.winwin-noti {
+  font-size: 20px;
+  padding: 30px 48px 31px 63px;
+  border-radius: 60px;
+  background-color: var(--noti-background);
+  line-height: 34px;
+}
+
+.winwin-noti.purple {
+  color: var(--noti-purple);
+  background-color: var(--noti-purple-background);
+}
+
+
+a.winwin-link {
+  color: var(--link);
+  font-weight: bold;
+}
+
+ul.winwin-links {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 15px;
+  letter-spacing: -0.26px;
+}
+
+ul.winwin-links > li.divider {
+  width: 1px;
+  height: 13px;
+  margin: 0 9px;
+  border-right: 1px solid var(--links-divider);
+}

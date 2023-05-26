@@ -1,0 +1,23 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: check-latency
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: check-latency
+            image: kubectl
+            command: ["/bin/sh", "-c"]
+            args: ["./check_latency.sh"]
+            volumeMounts:
+            - name: script-volume
+              mountPath: /
+          restartPolicy: OnFailure
+          volumes:
+          - name: script-volume
+            configMap:
+              name: check-latency-script

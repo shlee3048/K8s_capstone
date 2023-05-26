@@ -1,0 +1,37 @@
+# 전체 메트릭 조회
+count({__name__=~".+"}) by (__name__)
+
+# network가 들어간 메트릭 조회
+count({__name__=~".*network.*"}) by (__name__)
+
+# latency가 들어간 메트릭 조회
+count({__name__=~".*latency.*"}) by (__name__)
+
+# default 네임스페이스의 pod 수
+count(kube_pod_info{namespace="default"})
+
+# default 네임스페이스의 pod의 CPU 사용량
+sum(rate(container_cpu_usage_seconds_total{namespace="default", container!="POD", container!=""}[5m])) by (pod)
+
+
+# 최종적으로 사용할 메트릭들
+node_network_transmit_bytes_total: 워커 노드에서 전송된 바이트 수를 나타내는 메트릭입니다. 이 메트릭을 사용하여 네트워크 사용량을 추정할 수 있습니다.
+
+node_network_receive_bytes_total: 워커 노드에서 수신된 바이트 수를 나타내는 메트릭입니다. 이 메트릭을 사용하여 네트워크 사용량을 추정할 수 있습니다.
+
+node_network_transmit_errors_total: 워커 노드에서 발생한 전송 에러 수를 나타내는 메트릭입니다. 이 메트릭을 사용하여 네트워크 품질을 추정할 수 있습니다.
+
+node_network_receive_errors_total: 워커 노드에서 발생한 수신 에러 수를 나타내는 메트릭입니다. 이 메트릭을 사용하여 네트워크 품질을 추정할 수 있습니다.
+
+node_network_transmit_packets_total: 워커 노드에서 전송된 패킷 수를 나타내는 메트릭입니다. 이 메트릭을 사용하여 네트워크 사용량을 추정할 수 있습니다.
+
+node_network_receive_packets_total: 워커 노드에서 수신된 패킷 수를 나타내는 메트릭입니다. 이 메트릭을 사용하여 네트워크 사용량을 추정할 수 있습니다.
+
+node_network_transmit_packets_dropped_total: 워커 노드에서 전송 중 드롭된 패킷 수를 나타내는 메트릭입니다. 이 메트릭을 사용하여 네트워크 품질을 추정할 수 있습니다.
+
+node_network_receive_packets_dropped_total: 워커 노드에서 수신 중 드롭된 패킷 수를 나타내는 메트릭입니다. 이 메트릭을 사용하여 네트워크 품질을 추정할 수 있습니다.
+
+sum(rate(node_network_receive_bytes_total{instance="ip-20-0-1-187.ap-northeast-2.compute.internal"}[1m]))
+sum(rate(node_network_transmit_bytes_total{instance="ip-20-0-1-187.ap-northeast-2.compute.internal"}[1m]))
+sum(rate(node_network_receive_bytes_total{instance="ip-20-0-2-98.ap-northeast-2.compute.internal"}[1m]))
+sum(rate(node_network_transmit_bytes_total{instance="ip-20-0-2-98.ap-northeast-2.compute.internal"}[1m]))

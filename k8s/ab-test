@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# send to ip address of worker node 2
+#con=$1 # number of concurrency requests
+duration=60
+numOfRequest=50000
+ipWithPort="a4f7adf7ce77d49d2b2cef82130e0236-1849078050.ap-northeast-2.elb.amazonaws.com"
+eva_case=$1
+
+rm eva_$eva_case
+touch eva_$eva_case
+
+for i in 5 10 25 50
+do		
+	rm log_test_send_$i
+        ab -c $i -t $duration -n $numOfRequest http://$ipWithPort/ > log_test_send_$i
+        sleep 60
+done
+
+for i in 5 10 25 50
+do
+        sum=0
+        sum_mean=0
+        sum_sd=0
+        nr=`cat log_test_send_$i | grep "Requests per second" | sed 's/[^0-9.]*//g'`
+        sum=`echo $sum + $nr | bc`
+
+        totaltime=`cat log_test_send_$i | grep "Total:"`
+        mean=`echo $totaltime | awk '{print $3}'`
+        sum_mean=`echo $sum_mean + $mean | bc`
+
+        sd=`echo $totaltime | awk '{print $4}'`
+        sum_sd=`echo $sum_sd + $sd | bc`
+
+        echo "sum=${sum} | sum_mean=${sum_mean} | sum+sd${sum_sd}" >> eva_$eva_case
+done

@@ -1,0 +1,14 @@
+{% extends "winwinmarket_base/base_with_header.html" %}
+
+{% block title %}{{ post.title }} | 윈윈마켓{% endblock title %}
+
+{% block content %}
+<form class="winwin-noti post-confirm" method="post">
+  {% csrf_token %}
+  <span>정말 게시글을 삭제하시겠습니까?</span>
+  <div class="buttons">
+    <button class="winwin-button darkpurple" type="submit">삭제</button>
+    <a class="winwin-button darkgray" href="{% url 'post-detail' post.id %}">취소</a>
+  </div>
+</form>
+{% endblock content %}

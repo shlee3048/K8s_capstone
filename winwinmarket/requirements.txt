@@ -1,0 +1,9 @@
+Django==3.2.13
+django-allauth==0.50.0
+django-braces==1.15.0
+django-widget-tweaks==1.4.12
+Pillow==9.1.1
+mysqlclient==2.0.1
+django-mysql==3.9
+boto3==1.21.0
+django-storages==1.12.3

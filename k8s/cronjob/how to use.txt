@@ -1,0 +1,32 @@
+# 실행권한 부여
+chmod +x check_latency.sh
+
+# 리눅스의 cronjob 설정
+crontab -e
+2번 선택
+*/3 * * * * /home/ubuntu/k8s/cronjob/check_latency.sh
+
+# 테인트된 노드 확인
+kubectl get nodes -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.taints}{"\n"}{end}'
+
+
+
+------
+
+# configmap 생성
+kubectl create configmap check-latency-script --from-file=check_latency.sh
+kubectl delete configmap check-latency-script
+
+kubectl apply -f check_latency_configmap.yaml
+kubectl delete -f check_latency_configmap.yaml
+
+# cronjob 생성
+kubectl apply -f check_latency_cronjob.yaml
+kubectl delete -f check_latency_cronjob.yaml
+
+# cronjob 확인
+kubectl get cronjob
+
+# 테인트된 노드 확인
+kubectl get nodes -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.spec.taints}{"\n"}{end}'
+

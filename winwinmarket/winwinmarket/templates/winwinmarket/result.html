@@ -1,0 +1,43 @@
+{% extends "winwinmarket_base/base_with_navbar.html" %}
+
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="post-list">
+  <div class="header">
+    <h2>검색 결과: "{{ keyword }}"</h2>
+  </div>
+
+  <!-- 검색 기능 바 추가 -->
+  <div class="search-bar">
+    <form action="/search/" method="get">
+      <input type="text" name="q" placeholder="검색어를 입력하세요...">
+      <button type="submit">검색</button>
+    </form>
+  </div>
+  <!-- 검색 기능 바 끝 -->
+
+  <div class="posts">
+    {% for post in posts %}
+      <div class="winwin-card post">
+        <img class="thumb" src="{{ post.image1.url }}" alt="썸네일 이미지">
+        <div class="content">
+          <h2 class="title">{{ post.title }}</h2>
+          <div class="price-and-status">
+            <span class="price">
+              {{ post.item_price|intcomma }}원
+            </span>
+          </div>
+          <div class="meta">
+            {{ post.dt_created|date:"Y.m.d" }}&nbsp;|&nbsp;{{ post.author.address }}
+          </div>
+          <a class="winwin-button primary button" href="{% url 'post-detail' post.id %}">자세히보기</a>
+        </div>
+      </div>
+    {% empty %}
+      <p class="empty">검색 결과가 없습니다.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}

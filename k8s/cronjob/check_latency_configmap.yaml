@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: check-latency-script
+data:
+  check_latency.sh: |
+    #!/bin/bash
+
+    # 네트워크 지연이 있는 것으로 간주되는 최소 RTT (밀리초)
+    THRESHOLD=100
+
+    # 모든 워커 노드 가져오기
+    NODES=$(kubectl get nodes -o jsonpath='{.items[*].metadata.name}')
+
+    # 각 노드별로 처리
+    for NODE_NAME in $NODES; do
+      # 노드의 IP 주소 가져오기
+      NODE_IP=$(kubectl get node $NODE_NAME -o jsonpath='{.status.addresses[?(@.type=="InternalIP")].address}')
+
+      # ping을 사용하여 RTT 계산
+      RTT=$(ping -c 4 -q $NODE_IP | tail -1 | awk -F '/' '{print $5}')
+
+      if [ $(echo "$RTT > $THRESHOLD" | bc -l) -eq 1 ]; then
+        # 네트워크 지연이 있는 경우 테인트 추가
+        kubectl taint nodes $NODE_NAME network-latency=true:NoSchedule --overwrite
+      else
+        # 네트워크 지연이 없는 경우 테인트 제거
+        kubectl taint nodes $NODE_NAME network-latency:NoSchedule- 2>/dev/null || true
+      fi
+    done

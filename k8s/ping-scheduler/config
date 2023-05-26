@@ -1,0 +1,30 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUMvakNDQWVhZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJek1EUXdPREExTURjd01Wb1hEVE16TURRd05UQTFNRGN3TVZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTlZUCmpNRm9XTkpGaWZLQ2tkVUtHYW40ZXlWcXI4VGVFUUhldjVhVTdiVDZZTXBQT2JDaG0xS1c2aXFzYzdHeGxHOVIKOUJmQWlwODRkTFgybUc3WDhzV0FUWmt3cHFjRWdDMU1VMmlBSkM0eG5DRm9tWkRicW5wK1oyZVU5RWZmQk1ZWgpXd2hVam1yN0JwZDR5V3hnaWtTMHdBcWE5L2szOXZrRE5hNGlMT25xTkkwTXEwSkxKWjBIRnl4dGZHaHZEVTlSClpaZVlJUVBxZldjUlFSdXo2aUFuRG1tN2liSTFrNGJMeXJvdExRQXpFYnQ5RW1hZkViMTA2NWIxS0gwblNXbVkKUHpmUzVFenN4S1VVOUhLeThraGxMMjV2cmpFSjQ4SDFWYXMwdmYyZVVOMzBEbFFCbnhpc2NlREQvR1RJWjYyLwpEdml3emtnSWsrYWxLVGY1VEEwQ0F3RUFBYU5aTUZjd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0hRWURWUjBPQkJZRUZPQXhFMXRCTVlvMFh6VnV0SmlzRFUxWkxYeG1NQlVHQTFVZEVRUU8KTUF5Q0NtdDFZbVZ5Ym1WMFpYTXdEUVlKS29aSWh2Y05BUUVMQlFBRGdnRUJBSk5TbkpEaHRkNkZGVEcwbTBNdApXcDZkMFJXcWFjb1B5WUwrS21aRG04LzhCMFRZWTI0cDEvRUZ4eGlOdHdGRTUxa1daK2l3anZrNnFrZ2JxbGJQCi9IMjZiUXJsaEhtc2t5NlZUNWZ5dCtmTGN6TVJrNi9HdEFrbGdqQ0dFR3M2ZkFrUGllYUZkS0VCUVY1SDJjSHgKVXpXS1grVkVpVkZwWjF2eTBvc2I4bmptZXVzUnJUOVhHd20zRHVVZjRRSWZvOFN3azVuSEpSTGpXNWhyZG1RdQptOHdXMWtQMnhUaFRJVkJHeEcwM2FUWjY3RjdrdmtEQlRzRVZVbnhQUytFRHhqS2ExZ2UyU1R3QjQwL2xEQWpzClVKZEV1Q2NXVzJLWTlxRnJoejFRZDNDV1NUZTBHRGI0L3JPaEdLWU5YZWlCTjl0eklVeHB2TCt0L1dwSVNNdHYKYU1vPQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    server: https://14C5E2850D822A2E381FA83DF4D76D78.yl4.ap-northeast-2.eks.amazonaws.com
+  name: arn:aws:eks:ap-northeast-2:266852548854:cluster/shlee-eks-cluster
+contexts:
+- context:
+    cluster: arn:aws:eks:ap-northeast-2:266852548854:cluster/shlee-eks-cluster
+    user: arn:aws:eks:ap-northeast-2:266852548854:cluster/shlee-eks-cluster
+  name: arn:aws:eks:ap-northeast-2:266852548854:cluster/shlee-eks-cluster
+current-context: arn:aws:eks:ap-northeast-2:266852548854:cluster/shlee-eks-cluster
+kind: Config
+preferences: {}
+users:
+- name: arn:aws:eks:ap-northeast-2:266852548854:cluster/shlee-eks-cluster
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args:
+      - --region
+      - ap-northeast-2
+      - eks
+      - get-token
+      - --cluster-name
+      - shlee-eks-cluster
+      - --output
+      - json
+      command: aws
+

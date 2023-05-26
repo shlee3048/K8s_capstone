@@ -1,0 +1,25 @@
+1.
+pip install kubernetes ping3 boto3
+
+2.
+사용자 정의 스케줄러 코드 작성(zero_scheduler.py, requirements.txt)
+
+3. Dockerfile 작성
+
+4. Dockerimage 생성 후 Dockerhub에 push
+sudo docker login
+sudo docker build -t hohyun10/ping-scheduler:v6 .
+sudo docker push hohyun10/ping-scheduler:v6
+
+5. my-kube-scheduler.yaml 수정
+containers:
+- command:
+  - /usr/local/bin/python
+  - /app/zero_scheduler.py
+  image: <your-docker-registry>/<your-image-name>:<your-image-tag>
+
+6. my-kube-scheduler.yaml을 이용해서 사용자 정의 스케줄러 배포
+kubectl apply -f my-scheduler.yaml
+
+7. 배포할 파드에 zero_scheduler 사용하도록 설정
+schedulerName: zero-scheduler

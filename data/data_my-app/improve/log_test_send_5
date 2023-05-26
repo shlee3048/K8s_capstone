@@ -1,0 +1,42 @@
+This is ApacheBench, Version 2.3 <$Revision: 1879490 $>
+Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
+Licensed to The Apache Software Foundation, http://www.apache.org/
+
+Benchmarking a9b7b6f5faca040d4a290e2420b39919-313412810.ap-northeast-2.elb.amazonaws.com (be patient)
+
+
+Server Software:        WSGIServer/0.2
+Server Hostname:        a9b7b6f5faca040d4a290e2420b39919-313412810.ap-northeast-2.elb.amazonaws.com
+Server Port:            80
+
+Document Path:          /
+Document Length:        3337 bytes
+
+Concurrency Level:      5
+Time taken for tests:   60.000 seconds
+Complete requests:      5415
+Failed requests:        0
+Total transferred:      19461510 bytes
+HTML transferred:       18069855 bytes
+Requests per second:    90.25 [#/sec] (mean)
+Time per request:       55.402 [ms] (mean)
+Time per request:       11.080 [ms] (mean, across all concurrent requests)
+Transfer rate:          316.76 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    0   0.5      0      11
+Processing:    21   55  35.0     46     851
+Waiting:       21   53  33.9     45     842
+Total:         22   55  35.0     47     852
+
+Percentage of the requests served within a certain time (ms)
+  50%     47
+  66%     55
+  75%     61
+  80%     67
+  90%     87
+  95%    108
+  98%    133
+  99%    156
+ 100%    852 (longest request)

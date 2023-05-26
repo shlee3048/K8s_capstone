@@ -1,0 +1,163 @@
+# eksctl 설치
+
+# eks 업데이트
+aws eks update-kubeconfig --region ap-northeast-2 --name shlee-eks-cluster
+
+# eks 클러스터에 IAM OIDC 프로바이더가 연결
+eksctl utils associate-iam-oidc-provider --region ap-northeast-2 --cluster shlee-eks-cluster --approve
+
+# eks CA serviceaccount 설정
+eksctl create iamserviceaccount \
+--name cluster-autoscaler \
+--namespace kube-system \
+--cluster shlee-eks-cluster \
+--attach-policy-arn arn:aws:iam::266852548854:policy/shlee-iam-policy-cluster-autoscaler \
+--approve \
+--override-existing-serviceaccounts \
+--region ap-northeast-2
+
+# CA serviceaccount 생성 확인
+kubectl get sa -n kube-system | grep cluster-autoscaler
+
+# eks CA 설정
+cd k8s/cluster-autoscaler
+cluster-autoscaler.yaml의 155줄에 eks 클러스터 명 입력 후
+kubectl apply -f cluster-autoscaler.yaml
+
+---
+
+# 워커노드 접속
+sudo ssh -i public-key.pem ec2-user@ip-20-0-1-164.ap-northeast-2.compute.internal
+sudo ssh -i public-key.pem ec2-user@ip-20-0-2-213.ap-northeast-2.compute.internal 
+
+# tc 설치
+sudo yum install tc
+
+# 지연 설정
+sudo tc qdisc add dev eth0 root netem delay 30ms
+
+# 지연 삭제
+sudo tc qdisc del dev eth0 root netem
+
+# metrics-server 설치
+kubectl apply -f metrics-server.yaml
+
+# top 명령어
+kubectl top nodes
+kubectl top pod
+kubectl top pod -n kube-system
+# metrics-server api에서 정보를 json 형식으로 호출
+kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes" |jq '.'
+kubectl get --raw "/apis/metrics.k8s.io/v1beta1/nodes/ip-20-0-1-167.ap-northeast-2.compute.internal" |jq '.'
+kubectl get --raw "/apis/metrics.k8s.io/v1beta1/namespaces/kube-system/pods" |jq '.'
+
+# 웹사이트 파드, 로드밸런서, hpa배포
+kubectl apply -f k8s-manifest.yaml
+
+# prometheus 설치
+git clone https://github.com/prometheus-operator/kube-prometheus.git -b release-0.12
+cd kube-prometheus
+kubectl create -f ./manifests/setup/
+kubectl create -f ./manifests/
+kubectl get pods -n monitoring
+
+# alertmanager-service.yaml, prometheus-server.yaml에서 sessionAffinity: 마지막줄에 None으로 수정
+# grafana-service.yaml, alertmanager-service.yaml, prometheus-server.yaml 마지막줄에   type: LoadBalancer 추가하기
+
+# 수정된 내용 적용하기
+kubectl apply -f manifests/grafana-service.yaml
+kubectl apply -f manifests/alertmanager-service.yaml
+kubectl apply -f manifests/prometheus-service.yaml
+kubectl get svc -n monitoring
+# alertmanager-service.yaml, prometheus-server.yaml에서 sessionAffinity: 마지막줄에 ClientIP로 다시 수정 후 적용
+kubectl apply -f manifests/alertmanager-service.yaml
+kubectl apply -f manifests/prometheus-service.yaml
+
+# grafana의 최초 id passwd는 admin에 admin이다.
+# alertmanager-secret.yaml 내용에 slack 추가 수정
+kubectl apply -f manifests/alertmanager-secret.yaml
+kubectl apply -f manifests/test-prometheusRule.yaml
+
+# k8s 디렉터리로 가서 다중스케줄러 실행
+kubectl apply -f my-kube-scheduler.yaml
+
+# eks 마스터노드의 endpoint url 조회
+aws eks describe-cluster --name shlee-eks-cluster --query 'cluster.endpoint'
+
+# k8s/ping-scheduler 디렉토리에서 내가 만든 스케줄러 howtouse.txt 보고 실행
+
+---
+https://www.youtube.com/watch?v=JJfin3N-43E
+https://docs.aws.amazon.com/ko_kr/eks/latest/userguide/aws-load-balancer-controller.html
+
+
+# ingress-alb 설정
+kubectl create namespace test-ingress-alb
+
+eksctl create iamserviceaccount \
+--name aws-load-balancer-controller \
+--namespace kube-system \
+--cluster shlee-eks-cluster \
+--attach-policy-arn arn:aws:iam::266852548854:policy/shlee-alb-iam-policy \
+--approve \
+--override-existing-serviceaccounts \
+--region ap-northeast-2
+
+# alb 디렉토리로 가서 cert-manager.yaml 배포
+kubectl apply -f cert-manager.yaml
+kubectl get pods -n cert-manager
+
+# alb-controller.yaml 파일 내용중 739줄에 - --cluster-name=shlee-eks-cluster 으로 수정 
+
+# alb-controller.yaml 배포
+kubectl apply -f alb-controller.yaml
+kubectl get pods -n kube-system
+
+# pod 배포
+kubectl apply -f nginx-deploy.yaml
+
+# ingress 배포
+kubectl apply -f test-ingress.yaml
+kubectl get ingress -n test-ingress-alb
+
+# 대상그룹에서 round robin 대신 least outstanding requests로 변경
+
+---
+# Jenkins 설치
+https://velog.io/@aylee5/EKS-Helm%EC%9C%BC%EB%A1%9C-Jenkins-%EB%B0%B0%ED%8F%AC-MasterSlave-%EA%B5%AC%EC%A1%B0-with-Persistent-VolumeEBS
+
+# 설치 후 초기 비번
+kubectl get secret jenkins -n jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode
+
+# 플러그인 설치
+# ssh키 github이랑 jenkins에 등록
+
+---
+
+# ArgoCD 설치
+kubectl create namespace argocd
+mkdir argocd && cd argocd
+wget https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+kubectl apply -f install.yaml -n argocd
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+
+# ArgoCD 초기 비번 조회
+kubectl get secret argocd-initial-admin-secret -n argocd -o jsonpath="{.data.password}" | base64 -d; echo
+
+
+# ssh키 github이랑 argocd에 등록
+
+# Argo rollout 설치
+kubectl create namespace argo-rollouts
+kubectl apply -n argo-rollouts -f https://github.com/argoproj/argo-rollouts/releases/latest/download/install.yaml
+kubectl apply -k https://github.com/argoproj/argo-rollouts/manifests/crds\?ref\=stable
+curl -LO https://github.com/argoproj/argo-rollouts/releases/latest/download/kubectl-argo-rollouts-linux-amd64
+chmod +x ./kubectl-argo-rollouts-linux-amd64
+sudo mv ./kubectl-argo-rollouts-linux-amd64 /usr/local/bin/kubectl-argo-rollouts
+kubectl argo rollouts dashboard
+kubectl get pods -n argo-rollouts -l app.kubernetes.io/name=argo-rollouts
+kubectl port-forward -n argo-rollouts argo-rollouts-644f796ccc-bs9lp 3100:3100
+kubectl argo rollouts dashboard (아니면 뒤에 -n winwinmarket 붙이셈)
+http://localhost:3100/rollouts 접속
+kubectl apply -f rollout.yaml
+
