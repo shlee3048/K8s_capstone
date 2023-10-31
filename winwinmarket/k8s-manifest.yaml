@@ -32,8 +32,8 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: django-app
-  minReplicas: 0
-  maxReplicas: 0
+  minReplicas: 4
+  maxReplicas: 10
   metrics:
   - type: Resource
     resource:
