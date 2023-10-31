@@ -17,6 +17,11 @@ spec:
         image: hohyun10/winwinmarket_project:v4
         ports:
         - containerPort: 8000
+        resources:
+          limits:
+            cpu: 200m
+          requests:
+            cpu: 100m
 ---
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
@@ -27,7 +32,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: django-app
-  minReplicas: 4
+  minReplicas: 1
   maxReplicas: 10
   metrics:
   - type: Resource
