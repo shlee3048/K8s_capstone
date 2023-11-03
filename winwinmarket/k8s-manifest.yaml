@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: django-app
-        image: hohyun10/winwinmarket_project:v4
+        image: hohyun10/winwinmarket_project:v2
         ports:
         - containerPort: 8000
         resources:
